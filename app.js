@@ -44,6 +44,12 @@ socket.on('balance_data', data =>{
     console.log("Enter a command:")
 })
 
+socket.on('disconnect_message', data =>{
+    console.clear() 
+    console.log("SERVER MESSAGE: " + data)
+    process.exit()
+})
+
 rl.on('line', function(line){
     socket.emit('command', line)
 })

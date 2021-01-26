@@ -64,9 +64,15 @@ socket.on('balance_data', data =>{
     let balance = decrypt(clientPrivate, data);
     balance = JSON.parse(balance)
     //console.log(client)
-    console.log("BALANCE:")
-    console.log("\tOld: " + balance.old)
-    console.log("\tNew: " + balance.new)
+    if(balance.error === true){
+        console.log("BALANCE:")
+        console.log("\t$" + balance.old)
+        console.log("\tERROR: " + "Insufficient funds") 
+    }else{
+        console.log("BALANCE:")
+        console.log("\tOld: $" + balance.old)
+        console.log("\tNew: $" + balance.new)
+    }
     console.log("Enter a command:")
 })
 

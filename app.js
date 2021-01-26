@@ -1,10 +1,30 @@
 const io = require('socket.io-client');
 let readline = require('readline');
+const fs = require('fs');
+const crypto = require('crypto');
 
 if(process.argv[2] === undefined){
     console.log("ERROR: Enter a server ip with port")
     process.exit()
 }
+
+const encrypt = (publicKey, message) => {
+    //console.log(publicKey)
+    let enc = crypto.publicEncrypt({
+    key: publicKey,
+    padding: crypto.RSA_PKCS1_OAEP_PADDING
+    }, Buffer.from(message));
+    return enc.toString('base64');
+};
+
+
+const decrypt = (privateKey, message) => {
+    let enc = crypto.privateDecrypt({
+    key: privateKey,
+    padding: crypto.RSA_PKCS1_OAEP_PADDING
+    }, Buffer.from(message, 'base64'));
+    return enc.toString();
+};
 
 const socket = io(process.argv[2]);
 let rl = readline.createInterface({
@@ -25,7 +45,10 @@ socket.on('command_received', data =>{
 
 socket.on('client_data', data =>{
     console.clear() 
-    const client =  data
+    let clientPrivate = fs.readFileSync('keys/client.private.pem');
+    // console.log(data)
+    let client = decrypt(clientPrivate, data);
+    client = JSON.parse(client)
     //console.log(client)
     console.log("CLIENT DATA:")
     console.log("\tName: " + client.name)
@@ -36,7 +59,10 @@ socket.on('client_data', data =>{
 
 socket.on('balance_data', data =>{
     console.clear() 
-    const balance =  data
+    let clientPrivate = fs.readFileSync('keys/client.private.pem');
+    // console.log(data)
+    let balance = decrypt(clientPrivate, data);
+    balance = JSON.parse(balance)
     //console.log(client)
     console.log("BALANCE:")
     console.log("\tOld: " + balance.old)

@@ -77,5 +77,7 @@ socket.on('disconnect_message', data =>{
 })
 
 rl.on('line', function(line){
-    socket.emit('command', line)
+    let serverPublic = fs.readFileSync('keys/server.public.pem');
+    let message = encrypt(serverPublic, line);
+    socket.emit('command', message)
 })

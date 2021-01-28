@@ -1,3 +1,8 @@
+# Simple Socket Client 
+Simple Socket Client using socket.io and encrypts/decrypts messages with key files
+
+Works with: https://github.com/GerardoArjona/SocketServerNode
+
 ## Version & instalation
 
 Minimum requirements
